@@ -48,7 +48,7 @@ export default class App extends React.Component{
       Alert.alert ('Complete todos los campos')
     }
     else {
-   try{
+   
     firebase.auth().createUserWithEmailAndPassword(email,  password).then(function (user){
       console.log(user)
       console.log("se ha creado la cuenta")
@@ -67,10 +67,7 @@ export default class App extends React.Component{
     
       Alert.alert ("Se ha creado la cuenta, pero recuerde entrar a su mail y verificar su cuenta. En caso de no hacerlo no podra iniciar sesion.") 
     })
-    
-  }
-    catch(error) {
-      // Handle Errors here.
+    .catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
       if (errorCode == 'auth/weak-password') {
@@ -79,12 +76,14 @@ export default class App extends React.Component{
         alert(errorMessage);
       }
       console.log(error);
-    }
+    });
+  
   }
 }
 
+
 SingIn = (email, password) =>{
-  try{
+ 
     firebase.auth().signInWithEmailAndPassword(email, password).then(function (user){
       
         firebase.auth().onAuthStateChanged(function(user){
@@ -108,10 +107,19 @@ SingIn = (email, password) =>{
           }
         })
     })
-  }
-  catch (error){
-    Alert.alert (error.toString());
-  }
+    .catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode === 'auth/wrong-password') {
+        alert('Contraseña incorrecta');
+      } else {
+        alert(errorMessage);
+      }
+      console.log(error);
+    });
+
+
 }
 
 
