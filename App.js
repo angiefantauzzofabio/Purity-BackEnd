@@ -195,6 +195,38 @@ ChangePassword = (newPassword) =>{
 
 }
 
+DatosUsuario = () =>{
+  var user = firebase.auth().currentUser;
+  var uid = user.uid; 
+  var docRef = db.collection("usuarios").doc(uid);
+  docRef.get().then(function(doc) {
+    if (doc.exists){
+      console.log(uid);
+      var email = doc.get("email"); 
+      var nombre = doc.get("nombre")
+      console.log("Document data:", email);
+      console.log("Document data:", nombre);
+    }
+    else{
+      console.log("no existe documento"); 
+    }
+  })
+}
+DirrecionUsuario = () =>{
+  var user = firebase.auth().currentUser;
+  var uid = user.uid; 
+  var docRef = db.collection("usuarios").doc(uid);
+  docRef.get().then(function(doc) {
+    if (doc.exists){
+      console.log(uid);
+      console.log("Document data:", doc.get("direccion"));
+    }
+    else{
+      console.log("no existe documento"); 
+    }
+  })
+}
+
 
   render(){
     return(
@@ -276,9 +308,17 @@ ChangePassword = (newPassword) =>{
     >
         <Text style={styles.btntext}>CAMBIAR CONTRASEÑA</Text>
     </TouchableOpacity>
+    
+    <TouchableOpacity 
+      style={styles.buttom}
+      onPress={() => this.DatosUsuario()} 
+    >
+        <Text style={styles.btntext}>DATOS</Text>
+    </TouchableOpacity>
 
       <StatusBar style="auto" />
     </View>
+    
     )
   }
 }
