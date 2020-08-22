@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, ImageBackground, requireNativeComponent } from 'react-native';
 
 import * as firebase from 'firebase';  
 import "firebase/firestore";
@@ -9,6 +9,7 @@ import {decode, encode} from 'base-64'
 if (!global.btoa) {  global.btoa = encode }
 
 if (!global.atob) { global.atob = decode }
+
 
   // Your web app's Firebase configuration
   const firebaseConfig = {
@@ -240,11 +241,10 @@ onPress={() => this.DatosUsuario()}
 
   render(){
     return(
-    <View style={styles.container}>
-      <Text>Registration</Text>
-       <Text style={styles.header}>Registration</Text>
-
-
+    
+      
+      <ImageBackground source= {require('./assets/Abstract.jpg')} style={styles.backgroundimage}>
+      <View style={styles.container}>
       <TextInput style={styles.textinput} placeholder = "YOUR EMAIL" underlineColorAndroid= {'transparent'}
          onChangeText={email => this.setState({ email })}
          value={this.state.email}
@@ -323,11 +323,13 @@ onPress={() => this.DatosUsuario()}
     >
         <Text style={styles.btntext}>CAMBIAR CONTRASEÑA</Text>
     </TouchableOpacity>
+
+    </View>
+    </ImageBackground>
     
 
-
-      <StatusBar style="auto" />
-    </View>
+      
+    
     
     )
   }
@@ -337,7 +339,6 @@ onPress={() => this.DatosUsuario()}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -368,5 +369,9 @@ const styles = StyleSheet.create({
   btntext: {
     color: '#fff'
   },
+  backgroundimage:{
+    width : "100%",
+    flex: 1
+  }
 });
 
