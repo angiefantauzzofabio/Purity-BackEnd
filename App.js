@@ -37,9 +37,8 @@ export default class App extends React.Component{
       nombrecompleto:'',
       direccion:'',
       newPassword:'',
-      nuevaDir:''
-
-
+      nuevaDir:'',
+      confirmarPassword:''
     })
   }
 
@@ -175,18 +174,23 @@ ReAuth = (password) =>{
 }
 
 
-ChangePassword = (newPassword) =>{
+ChangePassword = (newPassword, confirmarPassword) =>{
 
   this.ReAuth(this.state.password).then(() =>{
     
     var user = firebase.auth().currentUser;
-    user.updatePassword(this.state.newPassword).then(function() {
-      Alert.alert ('Se ha cambiado la contraseña')
-      console.log ('se ha cambiado la contraseña')
-    })
-    .catch(function(error) {
-      console.error(error)
-    })
+    if (this.state.newPassword == this.state.confirmarPassword){
+      user.updatePassword(this.state.newPassword).then(function() {
+        Alert.alert ('Se ha cambiado la contraseña')
+        console.log ('se ha cambiado la contraseña')
+      })
+      .catch(function(error) {
+        console.error(error)
+      })
+    }
+    else{
+      Alert.alert("Las contraseñas no coinciden"); 
+    }
 
   })
   .catch((error) => {
@@ -227,6 +231,12 @@ DirrecionUsuario = () =>{
   })
 }
 
+/*    <TouchableOpacity 
+style={styles.buttom}
+onPress={() => this.DatosUsuario()} 
+>
+  <Text style={styles.btntext}>DATOS</Text>
+</TouchableOpacity>*/
 
   render(){
     return(
@@ -302,6 +312,11 @@ DirrecionUsuario = () =>{
         value={this.state.newPassword}
     />
 
+    <TextInput style={styles.textinput} placeholder = "CONFIRMAR CONTRASEÑA"underlineColorAndroid= {'transparent'}
+        onChangeText={ confirmarPassword => this.setState({ confirmarPassword })}
+        value={this.state.confirmarPassword}
+    />
+
     <TouchableOpacity 
       style={styles.buttom}
       onPress={() => this.ChangePassword(this.state.newPassword)} 
@@ -309,12 +324,7 @@ DirrecionUsuario = () =>{
         <Text style={styles.btntext}>CAMBIAR CONTRASEÑA</Text>
     </TouchableOpacity>
     
-    <TouchableOpacity 
-      style={styles.buttom}
-      onPress={() => this.DatosUsuario()} 
-    >
-        <Text style={styles.btntext}>DATOS</Text>
-    </TouchableOpacity>
+
 
       <StatusBar style="auto" />
     </View>
