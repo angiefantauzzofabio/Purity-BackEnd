@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, ImageBackground, requireNativeComponent } from 'react-native';
+import aqiCalculator from "aqi-calculator"; 
 
 import * as firebase from 'firebase';  
 import "firebase/firestore";
@@ -13,7 +14,13 @@ if (!global.atob) { global.atob = decode }
 
   // Your web app's Firebase configuration
   const firebaseConfig = {
-    
+    apiKey: "AIzaSyA8RZyosskoo3Invm7Iy9QaVo4CLLFR-is",
+    authDomain: "pruebareactnative-c445e.firebaseapp.com",
+    databaseURL: "https://pruebareactnative-c445e.firebaseio.com",
+    projectId: "pruebareactnative-c445e",
+    storageBucket: "pruebareactnative-c445e.appspot.com",
+    messagingSenderId: "660945583741",
+    appId: "1:660945583741:web:20448b91f461646ad87b14"
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
@@ -226,6 +233,46 @@ DirrecionUsuario = () =>{
   })
 }
 
+DatosFirebase = (direccion) =>{
+  direccion = 'marconi 1157';
+  console.log(direccion); 
+  let query = db.collection('mediciones').where('direccion', '==', direccion).get()
+  .then(snapshot => {
+    if (snapshot.empty) {
+      console.log('No matching documents.');
+      return;
+    }
+
+    snapshot.forEach(doc => {
+      console.log(doc.id, '=>', doc.data());
+      var par = doc.get("particulas");
+      var nitrogeno = doc.get("oxidos de nitrogeno")
+      var carbono = doc.get("monoxido de carbono")
+      var AQI; 
+      const DATA = [
+        {
+          //datetime: "2020-03-27T13:00:00.000Z", //Taking the 24-hour average concentration  - change when you use this example
+          pm25: par,
+          pm10: par,
+          so2: null,
+          no: null,
+          nox: nitrogeno,
+          no2: null,
+          o3: null,
+          co: carbono,
+        }
+      ];
+        var AQI = aqiCalculator(DATA);
+        console.log(AQI);
+      
+    });
+  })
+  .catch(err => {
+    console.log('Error getting documents', err);
+  });
+}
+
+
 /*    <TouchableOpacity 
 style={styles.buttom}
 onPress={() => this.DatosUsuario()} 
@@ -316,6 +363,15 @@ onPress={() => this.DatosUsuario()}
       onPress={() => this.ChangePassword(this.state.newPassword)} 
     >
         <Text style={styles.btntext}>CAMBIAR CONTRASEÑA</Text>
+    </TouchableOpacity>
+
+    
+
+    <TouchableOpacity 
+      style={styles.buttom}
+      onPress={() => this.DatosFirebase(this.state.direccion)} 
+    >
+        <Text style={styles.btntext}>AGARRAR DATOS</Text>
     </TouchableOpacity>
 
     </View>
